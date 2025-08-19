@@ -1,0 +1,7 @@
+# AuthCore
+
+## Objetivo
+
+## Tecnologias
+
+## Requisitos
