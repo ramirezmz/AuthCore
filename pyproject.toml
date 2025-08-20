@@ -8,9 +8,24 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "fastapi (>=0.116.1,<0.117.0)",
+    "uvicorn[standard] (>=0.35.0,<0.36.0)",
+    "bcrypt (>=4.3.0,<5.0.0)",
+    "pydantic[email] (>=2.11.7,<3.0.0)"
 ]
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+isort = "^6.0.1"
+flake8 = "^7.3.0"
+
+[tool.black]
+line-length = 88
+
+[tool.flake8]
+max-line-length = 88
