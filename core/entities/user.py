@@ -15,6 +15,7 @@ class UserRole(Enum):
 
 
 class User:
+
     def __init__(
         self,
         email: str,
@@ -24,8 +25,9 @@ class User:
         last_login: datetime | None = None,
         created_at: datetime | None = None,
         updated_at: datetime | None = None,
+        id: str | None = None,
     ):
-        self.id = str(uuid.uuid4())
+        self.id = id or str(uuid.uuid4())
         self.email = self._validate_email(email)
         self.name = name
         self.password = password
