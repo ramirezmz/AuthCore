@@ -17,5 +17,6 @@ def login(body: LoginRequest):
     try:
         token = authenticate_user(repo, body.email, body.password)
     except AuthenticationError as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     return {"status": "ok", "data": {"token": token}}

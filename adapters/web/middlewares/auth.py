@@ -3,7 +3,9 @@ from adapters.auth.jwt_auth_service import decode_token
 from datetime import datetime
 
 
-def validate_session(authorization: str = Header(None)):
+def validate_session(
+    authorization: str = Header(None)
+):
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -21,4 +23,5 @@ def validate_session(authorization: str = Header(None)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token expirado"
         )
+    # TODO: Implement query to validate token in db
     return payload
