@@ -5,6 +5,7 @@ from adapters.web.schemas.user_schema import (
 )
 from core.use_cases.create_user import create_user
 from adapters.db.sqlite_user_repository import SQLiteUserRepository
+from adapters.web.middlewares.auth import validate_session
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -15,20 +16,21 @@ def get_user_repository():
 
 @router.post("/", response_model=UserResponse)
 def create_user_route(
-    request: UserCreateRequest,
+    body: UserCreateRequest,
     repo: SQLiteUserRepository = Depends(get_user_repository),
+    user: dict = Depends(validate_session)
 ):
-    user = create_user(
-        repo, request.email, request.name, request.password, request.role.value
+    new_user = create_user(
+        repo, body
     )
 
     return UserResponse(
-        id=user.id,
-        email=user.email,
-        name=user.name,
-        role=user.role,  # type: ignore
-        created_at=user.created_at.isoformat(),
-        updated_at=user.updated_at.isoformat(),
+        id=new_user.id,
+        email=new_user.email,
+        name=new_user.name,
+        role=new_user.role,  # type: ignore
+        created_at=new_user.created_at.isoformat(),
+        updated_at=new_user.updated_at.isoformat(),
     )
 
 
