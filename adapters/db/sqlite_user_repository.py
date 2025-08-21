@@ -6,10 +6,7 @@ from config.settings import settings
 
 class SQLiteUserRepository(UserRepository):
     def __init__(self):
-        self.connection = sqlite3.connect(
-            settings.DB_PATH,
-            check_same_thread=False
-        )
+        self.connection = sqlite3.connect(settings.DB_PATH, check_same_thread=False)
         self.connection.row_factory = sqlite3.Row
 
     def save(self, user: User) -> User:
