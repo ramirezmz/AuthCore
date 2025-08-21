@@ -4,10 +4,10 @@ run:
 	poetry run uvicorn app.main:app --reload
 
 test:
-	poetry run pytest
+	PYTHONPATH=. poetry run pytest
 
 lint:
-	poetry run black . && poetry run flake8 .
+	PYTHONPATH=. poetry run black . && poetry run flake8 .
 
 populate:
 	PYTHONPATH=. poetry run python scripts/populate_db.py
