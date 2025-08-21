@@ -13,6 +13,13 @@ class UserRole(Enum):
     USER = "user"
     INVITED = "invited"
 
+    @classmethod
+    def validate(cls, role_payload: str) -> "UserRole":
+        try:
+            return cls(role_payload)
+        except ValueError:
+            raise ValueError(f"Invalid user role: {role_payload}")
+
 
 class User:
 
@@ -21,7 +28,7 @@ class User:
         email: str,
         name: str,
         password: str,
-        role: UserRole = UserRole.USER,
+        role: UserRole | str = UserRole.USER,
         last_login: datetime | None = None,
         created_at: datetime | None = None,
         updated_at: datetime | None = None,
