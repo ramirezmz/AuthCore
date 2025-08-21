@@ -6,30 +6,37 @@ from config.settings import settings
 
 class SQLiteUserRepository(UserRepository):
     def __init__(self):
-        self.connection = sqlite3.connect(settings.DB_PATH, check_same_thread=False)
+        self.connection = sqlite3.connect(
+            settings.DB_PATH, check_same_thread=False)
         self.connection.row_factory = sqlite3.Row
 
     def save(self, user: User) -> User:
         cursor = self.connection.cursor()
-        cursor.execute(
-            (
-                "INSERT INTO users (id, email, name, password, role, "
-                "last_login, created_at, updated_at) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-            ),
-            (
-                user.id,
-                user.email,
-                user.name,
-                user.password,
-                user.role,
-                user.last_login,
-                user.created_at,
-                user.updated_at,
-            ),
-        )
-        self.connection.commit()
-        return user
+        try:
+            cursor.execute(
+                (
+                    "INSERT INTO users (id, email, name, password, role, "
+                    "last_login, created_at, updated_at) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                ),
+                (
+                    user.id,
+                    user.email,
+                    user.name,
+                    user.password,
+                    user.role,
+                    user.last_login,
+                    user.created_at,
+                    user.updated_at,
+                ),
+            )
+            self.connection.commit()
+            return user
+        except Exception as error:
+            self.connection.rollback()
+            raise error
+        finally:
+            cursor.close()
 
     def get_by_email(self, email: str) -> User | None:
         cursor = self.connection.cursor()
