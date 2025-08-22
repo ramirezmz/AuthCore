@@ -6,7 +6,7 @@ from core.use_cases.authenticate_user import (
 )
 from adapters.db.sqlite_user_repository import SQLiteUserRepository
 
-user_data = {"email": "admin@example.com", "password": "123456"}
+user_data = {"email": "admin1@example.com", "password": "123456"}
 
 
 def test_authenticate_user_success():

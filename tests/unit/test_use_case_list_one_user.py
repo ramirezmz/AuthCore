@@ -7,10 +7,14 @@ def test_list_one_user_success():
     """ Should be able to return the user details """
 
     repo = SQLiteUserRepository()
-    user = get_user(repo, user_id="9e36d083-3a30-4a81-b5c7-536c39e134cc")
+    target_user = repo.get_by_email("guest1@example.com")
+    if not target_user:
+        raise Exception("User not found")
+
+    user = get_user(repo, user_id=target_user.id)
     assert user is not None
-    assert user.email == "admin@example.com"
-    assert user.name == "Admin User"
+    assert user.email == target_user.email
+    assert user.name == target_user.name
 
 
 def test_list_one_user_not_found():
