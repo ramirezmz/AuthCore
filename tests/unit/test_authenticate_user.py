@@ -29,7 +29,7 @@ def test_authenticate_user_invalid_password():
     assert "Invalid credentials" in str(exc.value)
 
 
-def test_authenticate_user_user_not_found(monkeypatch):
+def test_authenticate_user_user_not_found():
     """Deve lançar AuthenticationError se o usuário não for encontrado"""
 
     repo = SQLiteUserRepository()
