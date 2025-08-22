@@ -27,6 +27,7 @@ var/
 *.egg
 *.whl
 *.wheel
+*.db
 
 # Virtual environment
 .env/
