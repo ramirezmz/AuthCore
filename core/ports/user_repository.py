@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
 from core.entities.user import User
 from core.utils.validate_query import UserQuery
-from adapters.web.schemas.user_schema import UserListAllResponse
+from adapters.web.schemas.user_schema import (
+    UserListAllResponse,
+    UserResponse,
+)
 
 
 class UserRepository(ABC):
@@ -19,4 +22,12 @@ class UserRepository(ABC):
 
     @abstractmethod
     def get_all_users(self, query: UserQuery) -> UserListAllResponse:
+        pass
+
+    @abstractmethod
+    def update_one_user(
+        self,
+        user_id: str,
+        user: User
+    ) -> UserResponse | None:
         pass

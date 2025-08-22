@@ -3,6 +3,8 @@ import uuid
 from datetime import datetime
 from enum import Enum
 
+from adapters.web.schemas.user_schema import AvailableUserUpdateRequest
+
 
 class UserRole(Enum):
     """
@@ -58,3 +60,11 @@ class User:
 
     def _touch(self) -> None:
         self.updated_at = datetime.utcnow()
+
+    def merge(self, user_data: AvailableUserUpdateRequest):
+        today = datetime.utcnow()
+        self.email = user_data.email or self.email
+        self.name = user_data.name or self.name
+        self.role = user_data.role or self.role
+        self.updated_at = today
+        return self

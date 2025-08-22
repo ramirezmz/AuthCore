@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from enum import Enum
+from typing import Optional
 
 
 class RoleEnum(str, Enum):
@@ -27,3 +28,9 @@ class UserResponse(BaseModel):
 class UserListAllResponse(BaseModel):
     total: int
     users: list[UserResponse]
+
+
+class AvailableUserUpdateRequest(BaseModel):
+    email: Optional[EmailStr] = None
+    name: Optional[str] = None
+    role: Optional[RoleEnum] = None

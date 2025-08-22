@@ -118,3 +118,49 @@ class SQLiteUserRepository(UserRepository):
             total=total,
             users=users
         )
+
+    def update_one_user(self, user_id: str, user: User) -> UserResponse | None:
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(
+                (
+                    "UPDATE users SET email = ?, name = ?, "
+                    "role = ?, last_login = ?, created_at = ?, updated_at = ? "
+                    "WHERE id = ?"
+                ),
+                (
+                    user.email,
+                    user.name,
+                    user.role,
+                    user.last_login,
+                    user.created_at,
+                    user.updated_at,
+                    user_id,
+                ),
+            )
+            self.connection.commit()
+            # Fetch the updated user
+            cursor.execute(
+                (
+                    "SELECT id, email, name, role, last_login, "
+                    "created_at, updated_at "
+                    "FROM users WHERE id = ?"
+                ),
+                (user_id,)
+            )
+            row = cursor.fetchone()
+            if row:
+                return UserResponse(
+                    id=row["id"],
+                    email=row["email"],
+                    name=row["name"],
+                    role=row["role"],
+                    created_at=row["created_at"],
+                    updated_at=row["updated_at"],
+                )
+            return None
+        except Exception as error:
+            self.connection.rollback()
+            raise error
+        finally:
+            cursor.close()

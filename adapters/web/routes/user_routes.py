@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends
 from adapters.web.schemas.user_schema import (
+    AvailableUserUpdateRequest,
     UserCreateRequest,
     UserResponse,
 )
 from core.use_cases.create_user import create_user
 from core.use_cases.list_one_user import get_user
+from core.use_cases.update_user import update_user
 from adapters.db.sqlite_user_repository import SQLiteUserRepository
 from adapters.web.middlewares.auth import validate_session
 from fastapi import HTTPException, status
@@ -74,9 +76,30 @@ def get_user_route(
     return get_user(repo, user_id)
 
 
-@router.put("/{user_id}")
-def update_user(user_id: str):
-    return {"message": f"update user {user_id}"}
+@router.put("/{user_id}", response_model=UserResponse)
+def update_user_route(
+    user_id: str,
+    payload: AvailableUserUpdateRequest,
+    repo: SQLiteUserRepository = Depends(get_user_repository),
+    user: dict = Depends(validate_session)
+):
+    available_roles = ["admin", "user"]
+    if user.get("role") not in available_roles:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso negado"
+        )
+    result = update_user(
+        repo,
+        user_id=user_id,
+        user_data=payload
+    )
+    if not result:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    return result
 
 
 @router.delete("/{user_id}")
