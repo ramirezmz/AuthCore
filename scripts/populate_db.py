@@ -1,23 +1,33 @@
+import sys
 import sqlite3
-import bcrypt
 from datetime import datetime
 import uuid
 
 from config.settings import settings
+from core.utils.password_utils import encrypt_password
+
+
+def remove_users(conn):
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users;")
+    conn.commit()
 
 
 def create_tables(conn):
     cursor = conn.cursor()
     cursor.execute(
         """
+
         CREATE TABLE IF NOT EXISTS users (
             id TEXT PRIMARY KEY,
             email TEXT UNIQUE NOT NULL,
             name TEXT NOT NULL,
+
             password TEXT NOT NULL,
             role TEXT NOT NULL,
             last_login TIMESTAMP NULL,
             created_at TIMESTAMP NOT NULL,
+
             updated_at TIMESTAMP NOT NULL
         );
         """
@@ -25,16 +35,11 @@ def create_tables(conn):
     conn.commit()
 
 
-def hash_password(password: str) -> str:
-    """Gera hash usando bcrypt"""
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-
-
 def populate_users(conn):
     cursor = conn.cursor()
 
     now = datetime.utcnow().isoformat()
-    password = hash_password("123456")
+    password = encrypt_password("123456")
 
     users = []
 
@@ -49,8 +54,7 @@ def populate_users(conn):
     invited_names = [
         "Groot", "Rocket Raccoon"
     ]
-
-    # Create 10 admin users
+    # Create admin users
     for i, name in enumerate(admin_names, 1):
         users.append(
             (
@@ -91,6 +95,7 @@ def populate_users(conn):
                 "invited",
                 None,
                 now,
+
                 now,
             )
         )
@@ -107,9 +112,26 @@ def populate_users(conn):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python populate_db.py [add|remove|both]")
+        sys.exit(1)
+
+    action = sys.argv[1].lower()
     db_path = settings.DB_PATH
     conn = sqlite3.connect(db_path)
     create_tables(conn)
-    populate_users(conn)
+
+    if action == "remove":
+        remove_users(conn)
+        print("✅ All users removed from the database!")
+    elif action == "add":
+        populate_users(conn)
+        print("✅ Database populated successfully!")
+    elif action == "both":
+        remove_users(conn)
+        populate_users(conn)
+        print("✅ Database cleaned and populated successfully!")
+    else:
+        print("Invalid argument. Use 'add', 'remove', or 'both'.")
+        sys.exit(1)
     conn.close()
-    print("✅ Database populated successfully!")

@@ -10,4 +10,7 @@ lint:
 	PYTHONPATH=. poetry run black . && poetry run flake8 .
 
 populate:
-	PYTHONPATH=. poetry run python scripts/populate_db.py
+	PYTHONPATH=. poetry run python scripts/populate_db.py ${ARG}
+
+test-coverage:
+	PYTHONPATH=. poetry run pytest --cov=app --cov-report=term-missing
