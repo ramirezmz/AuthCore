@@ -36,38 +36,64 @@ def populate_users(conn):
     now = datetime.utcnow().isoformat()
     password = hash_password("123456")
 
-    users = [
-        (
-            str(uuid.uuid4()),
-            "admin@example.com",
-            "Admin User",
-            password,
-            "admin",
-            None,
-            now,
-            now,
-        ),
-        (
-            str(uuid.uuid4()),
-            "user@example.com",
-            "Normal User",
-            password,
-            "user",
-            None,
-            now,
-            now,
-        ),
-        (
-            str(uuid.uuid4()),
-            "guest@example.com",
-            "Invited User",
-            password,
-            "invited",
-            None,
-            now,
-            now,
-        ),
+    users = []
+
+    admin_names = [
+        "Tony Stark", "Nick Fury", "Pepper Potts", "Maria Hill",
+        "Phil Coulson", "Happy Hogan", "Wong", "Okoye", "Shuri", "Heimdall"
     ]
+    user_names = [
+        "Peter Parker", "Steve Rogers", "Natasha Romanoff",
+        "Bruce Banner", "Clint Barton"
+    ]
+    invited_names = [
+        "Groot", "Rocket Raccoon"
+    ]
+
+    # Create 10 admin users
+    for i, name in enumerate(admin_names, 1):
+        users.append(
+            (
+                str(uuid.uuid4()),
+                f"admin{i}@example.com",
+                name,
+                password,
+                "admin",
+                None,
+                now,
+                now,
+            )
+        )
+
+    # Create 5 normal users
+    for i, name in enumerate(user_names, 1):
+        users.append(
+            (
+                str(uuid.uuid4()),
+                f"user{i}@example.com",
+                name,
+                password,
+                "user",
+                None,
+                now,
+                now,
+            )
+        )
+
+    # Create 2 invited users
+    for i, name in enumerate(invited_names, 1):
+        users.append(
+            (
+                str(uuid.uuid4()),
+                f"guest{i}@example.com",
+                name,
+                password,
+                "invited",
+                None,
+                now,
+                now,
+            )
+        )
 
     cursor.executemany(
         """
