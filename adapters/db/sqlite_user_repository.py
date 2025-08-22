@@ -54,3 +54,20 @@ class SQLiteUserRepository(UserRepository):
                 updated_at=row["updated_at"],
             )
         return None
+
+    def get_user_by_id(self, user_id: str) -> User | None:
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+        row = cursor.fetchone()
+        if row:
+            return User(
+                id=row["id"],
+                email=row["email"],
+                name=row["name"],
+                password=row["password"],
+                role=row["role"],
+                last_login=row["last_login"],
+                created_at=row["created_at"],
+                updated_at=row["updated_at"],
+            )
+        return None
