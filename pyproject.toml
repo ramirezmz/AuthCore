@@ -34,7 +34,6 @@ line-length = 88
 max-line-length = 88
 
 [tool.pytest.ini_options]
-addopts = "--cov=. --cov-report=term-missing"
 testpaths = ["tests"]
 
 [tool.coverage.run]

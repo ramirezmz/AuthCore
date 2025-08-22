@@ -14,8 +14,12 @@ def test_authenticate_user_success():
 
     repo = SQLiteUserRepository()
     token = authenticate_user(repo, user_data["email"], user_data["password"])
+    user = repo.get_by_email(user_data["email"])
+    if not user:
+        raise Exception("User not found")
 
     assert len(token) > 80
+    assert user.last_login is not None
 
 
 def test_authenticate_user_invalid_password():

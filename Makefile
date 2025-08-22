@@ -13,4 +13,4 @@ populate:
 	PYTHONPATH=. poetry run python scripts/populate_db.py ${ARG}
 
 test-coverage:
-	PYTHONPATH=. poetry run pytest --cov=app --cov-report=term-missing
+	PYTHONPATH=. poetry run pytest --cov=. --cov-report=term-missing --cov-report=term-missing
