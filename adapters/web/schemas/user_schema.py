@@ -22,3 +22,8 @@ class UserResponse(BaseModel):
     role: RoleEnum
     created_at: str
     updated_at: str
+
+
+class UserListAllResponse(BaseModel):
+    total: int
+    users: list[UserResponse]

@@ -8,6 +8,8 @@ from core.use_cases.list_one_user import get_user
 from adapters.db.sqlite_user_repository import SQLiteUserRepository
 from adapters.web.middlewares.auth import validate_session
 from fastapi import HTTPException, status
+from core.utils.validate_query import validate_query, UserQuery
+from adapters.web.schemas.user_schema import UserListAllResponse
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -42,9 +44,19 @@ def create_user_route(
     )
 
 
-@router.get("/")
-def list_users(page: int = 1, size: int = 10):
-    return {"message": f"list users page={page} size={size}"}
+@router.get("/", response_model=UserListAllResponse)
+def list_users(
+        repo: SQLiteUserRepository = Depends(get_user_repository),
+        user: dict = Depends(validate_session),
+        query: UserQuery = Depends(validate_query)
+):
+    available_roles = ["admin", "user"]
+    if user.get("role") not in available_roles:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso negado"
+        )
+    return repo.get_all_users(query)
 
 
 @router.get("/{user_id}", response_model=UserResponse)
