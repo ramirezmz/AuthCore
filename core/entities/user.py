@@ -27,7 +27,7 @@ class User:
         self,
         email: str,
         name: str,
-        password: str,
+        password: str | None = None,
         role: UserRole | str = UserRole.USER,
         last_login: datetime | None = None,
         created_at: datetime | None = None,
