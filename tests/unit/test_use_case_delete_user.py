@@ -1,5 +1,3 @@
-
-
 import pytest
 import sqlite3
 from adapters.db.sqlite_user_repository import SQLiteUserRepository
@@ -12,8 +10,8 @@ from scripts.populate_db import create_tables, populate_users, remove_users
 def setup_database():
     db_path = settings.DB_PATH
     connection = sqlite3.connect(db_path)
-    remove_users(connection)
     create_tables(connection)
+    remove_users(connection)
     populate_users(connection)
 
 

@@ -1,6 +1,19 @@
-
+import pytest
+import sqlite3
 from adapters.db.sqlite_user_repository import SQLiteUserRepository
 from core.use_cases.list_one_user import get_user
+from config.settings import settings
+
+from scripts.populate_db import create_tables, populate_users, remove_users
+
+
+@pytest.fixture(scope="module", autouse=True)
+def setup_database():
+    db_path = settings.DB_PATH
+    connection = sqlite3.connect(db_path)
+    create_tables(connection)
+    remove_users(connection)
+    populate_users(connection)
 
 
 def test_list_one_user_success():

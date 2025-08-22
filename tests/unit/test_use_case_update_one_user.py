@@ -12,8 +12,8 @@ from core.use_cases.update_user import update_user
 def setup_database():
     db_path = settings.DB_PATH
     connection = sqlite3.connect(db_path)
-    remove_users(connection)
     create_tables(connection)
+    remove_users(connection)
     populate_users(connection)
 
 
