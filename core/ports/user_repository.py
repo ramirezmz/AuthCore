@@ -31,3 +31,7 @@ class UserRepository(ABC):
         user: User
     ) -> UserResponse | None:
         pass
+
+    @abstractmethod
+    def delete_user(self, user_id: str) -> bool:
+        pass

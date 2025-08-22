@@ -164,3 +164,15 @@ class SQLiteUserRepository(UserRepository):
             raise error
         finally:
             cursor.close()
+
+    def delete_user(self, user_id: str) -> bool:
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+            self.connection.commit()
+            return cursor.rowcount > 0
+        except Exception as error:
+            self.connection.rollback()
+            raise error
+        finally:
+            cursor.close()
