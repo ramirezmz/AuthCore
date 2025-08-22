@@ -176,3 +176,29 @@ class SQLiteUserRepository(UserRepository):
             raise error
         finally:
             cursor.close()
+
+    def update(self, user_id: str, user: User):
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(
+                (
+                    "UPDATE users SET email = ?, name = ?, "
+                    "role = ?, last_login = ?, created_at = ?, updated_at = ? "
+                    "WHERE id = ?"
+                ),
+                (
+                    user.email,
+                    user.name,
+                    user.role,
+                    user.last_login,
+                    user.created_at,
+                    user.updated_at,
+                    user_id,
+                ),
+            )
+            self.connection.commit()
+        except Exception as error:
+            self.connection.rollback()
+            raise error
+        finally:
+            cursor.close()

@@ -51,8 +51,11 @@ class User:
             raise ValueError("Invalid email format")
         return email
 
-    def update_last_login(self) -> None:
-        self.last_login = datetime.utcnow()
+    def update_last_login(self) -> "User":
+        today = datetime.utcnow()
+        self.last_login = today
+        self.updated_at = today
+        return self
 
     def change_password(self, new_password: str) -> None:
         self.password = new_password

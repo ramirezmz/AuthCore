@@ -22,4 +22,6 @@ def authenticate_user(
     if not is_valid_password:
         raise AuthenticationError("Invalid credentials")
     token = generate_token(user)
+    to_update = user.update_last_login()
+    user_repository.update(to_update.id, to_update)
     return token
