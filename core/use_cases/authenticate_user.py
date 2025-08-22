@@ -13,7 +13,13 @@ def authenticate_user(
     password: str,
 ) -> str:
     user = user_repository.get_by_email(email)
-    if not user or not verify_password(password, user.password):
+    if not user:
+        raise AuthenticationError("User not found")
+
+    if not user.password:
+        raise AuthenticationError("Invalid credentials")
+    is_valid_password = verify_password(password, user.password)
+    if not is_valid_password:
         raise AuthenticationError("Invalid credentials")
     token = generate_token(user)
     return token
