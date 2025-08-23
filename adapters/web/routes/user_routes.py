@@ -103,5 +103,20 @@ def update_user_route(
 
 
 @router.delete("/{user_id}")
-def delete_user(user_id: str):
-    return {"message": f"delete user {user_id}"}
+def delete_user(
+        user_id: str,
+        repo: SQLiteUserRepository = Depends(get_user_repository),
+        user: dict = Depends(validate_session)):
+    available_roles = ["admin"]
+    if user.get("role") not in available_roles:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso negado"
+        )
+    result = repo.delete_user(user_id)
+    if not result:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    return {"message": f"User {user_id} deleted successfully"}
