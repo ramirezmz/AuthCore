@@ -70,6 +70,15 @@ make run
 
 You can access the API endpoints at `http://localhost:8000/docs` for the interactive Swagger UI.
 
+3. Default User Credentials
+
+In this app we have 3 user kinds:
+
+- Admin: admin1@example.com / password
+- User: user1@example.com / password
+- Guest: guest1@example.com / password
+
+The default password for all users is "123456".
 
 ## Testing and coverage
 
