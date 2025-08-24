@@ -1,17 +1,21 @@
-from fastapi import Header, HTTPException, status
+from fastapi import Depends, HTTPException, status
 from adapters.auth.jwt_auth_service import decode_token
 from datetime import datetime
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+
+security = HTTPBearer()
 
 
 def validate_session(
-    authorization: str = Header(None)
+    credentials: HTTPAuthorizationCredentials = Depends(security)
 ):
-    if not authorization or not authorization.startswith("Bearer "):
+    if not credentials or not credentials.credentials:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token ausente ou inválido"
         )
-    token = authorization.split("Bearer ")[1]
+    token = credentials.credentials
     payload = decode_token(token)
     if "error" in payload:
         raise HTTPException(
